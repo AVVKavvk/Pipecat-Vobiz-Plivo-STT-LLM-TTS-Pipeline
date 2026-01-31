@@ -7,7 +7,7 @@ load_dotenv()
 
 
 def get_host_and_protocol(request: Request):
-    public_url = os.getenv("URL")
+    public_url = os.getenv("SERVER_URL")
 
     if public_url:
         if public_url.startswith("https://"):
