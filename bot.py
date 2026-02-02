@@ -21,9 +21,10 @@ from pipecat.processors.aggregators.llm_context import LLMContextMessage
 from pipecat.runner.types import RunnerArguments
 from pipecat.runner.utils import parse_telephony_websocket
 from pipecat.serializers.plivo import PlivoFrameSerializer
-from pipecat.services.cartesia.tts import CartesiaTTSService
-from pipecat.services.deepgram.stt import DeepgramSTTService
-from pipecat.services.openai.llm import OpenAILLMService
+from pipecat.services.openai.stt import OpenAISTTService
+from pipecat.services.google.llm import GoogleLLMService
+from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
+# from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.transports.base_transport import BaseTransport
 from pipecat.transports.websocket.fastapi import (
     FastAPIWebsocketParams,
@@ -40,19 +41,20 @@ You are Priya, a friendly, confident, and professional health insurance advisor 
 
 async def run_bot(transport: BaseTransport, handle_sigint: bool):
    # Initialize services
-    llm = OpenAILLMService(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        model="gpt-4o-mini"
+    llm = GoogleLLMService(
+        api_key=str(os.getenv("GEMINI_API_KEY")),
+        model="gemini-2.5-flash"
     )
 
-    stt = DeepgramSTTService(
-        api_key=str(os.getenv("DEEPGRAM_API_KEY")),
-        model="nova-2-general"
+    stt = OpenAISTTService(
+        api_key=str(os.getenv("OPENAI_API_KEY")),
+        model="gpt-4o-transcribe"
     )
 
-    tts = CartesiaTTSService(
-        api_key=str(os.getenv("CARTESIA_API_KEY")),
-        voice_id="71a7ad14-091c-4e8e-a314-022ece01c121",  # British Reading Lady
+    tts = ElevenLabsTTSService(
+       api_key=str(os.getenv("ELEVENLABS_API_KEY")),
+       voice_id=str(os.getenv("ELEVENLABS_VOICE_ID"))
+       
     )
 
     # System prompt
